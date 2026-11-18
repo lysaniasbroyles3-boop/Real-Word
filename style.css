@@ -438,3 +438,84 @@ footer span {
         padding: 22px;
     }
 }
+
+/* VERSE OF THE DAY */
+
+.daily-verse {
+    position: relative;
+    overflow: hidden;
+    margin: 30px auto;
+    padding: 30px;
+    max-width: 950px;
+    background: linear-gradient(135deg, #21153c, #100d20);
+    border: 1px solid rgba(230, 190, 100, 0.5);
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+}
+
+.daily-verse::before {
+    content: "✦";
+    position: absolute;
+    right: 25px;
+    top: 10px;
+    font-size: 100px;
+    color: rgba(230, 190, 100, 0.08);
+}
+
+.daily-top,
+.daily-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.daily-label {
+    color: #e6be64;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.daily-date,
+.daily-version {
+    color: #aaa0c5;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.daily-verse h2 {
+    color: #f0ca76;
+    font-size: 27px;
+    margin: 22px 0 15px;
+}
+
+.daily-text {
+    color: #fff7e8;
+    font-size: 21px;
+    line-height: 1.8;
+    max-width: 800px;
+    position: relative;
+}
+
+.daily-reference {
+    color: #e6be64;
+    font-weight: 800;
+    font-size: 15px;
+}
+
+.daily-loading {
+    color: #c5b8df;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .daily-verse {
+        padding: 20px;
+    }
+
+    .daily-text {
+        font-size: 18px;
+    }
+}
