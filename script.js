@@ -193,3 +193,146 @@ function copyVerse() {
 console.log("✝ SCRIPTURE QUEST V1.0 ONLINE");
 console.log("Bible search engine initialized.");
 console.log("Ready to explore God's Word.");
+
+/* =====================================
+   SCRIPTURE QUEST - VERSE OF THE DAY
+   ===================================== */
+
+const DAILY_VERSE_KEY = "scriptureQuestDailyVerse";
+
+const DAILY_BIBLE_URL =
+    "https://api.getbible.net/v3/kjv.json";
+
+function getLocalDateKey() {
+    const now = new Date();
+
+    return [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0")
+    ].join("-");
+}
+
+function getDailyVerseNumber() {
+    const startDate = Date.UTC(2026, 10, 18);
+
+    const now = new Date();
+
+    const today = Date.UTC(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+    );
+
+    const daysPassed = Math.max(
+        0,
+        Math.floor((today - startDate) / 86400000)
+    );
+
+    return daysPassed % 31102;
+}
+
+function displayDailyVerse(verse) {
+    document.getElementById("dailyVerseStatus").textContent =
+        "A scripture for today";
+
+    document.getElementById("dailyVerseText").textContent =
+        verse.text;
+
+    document.getElementById("dailyVerseReference").textContent =
+        verse.reference;
+
+    document.getElementById("dailyVerseDate").textContent =
+        new Date().toLocaleDateString(undefined, {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+}
+
+async function loadDailyVerse() {
+    const savedDate = getLocalDateKey();
+
+    const savedVerse = localStorage.getItem(DAILY_VERSE_KEY);
+
+    // Use today's saved verse if it has already been loaded.
+    if (savedVerse) {
+        try {
+            const saved = JSON.parse(savedVerse);
+
+            if (saved.date === savedDate) {
+                displayDailyVerse(saved.verse);
+                return;
+            }
+        } catch (error) {
+            console.log("Loading a fresh daily verse.");
+        }
+    }
+
+    const status = document.getElementById("dailyVerseStatus");
+
+    status.textContent = "Loading the complete Bible...";
+
+    try {
+        const response = await fetch(DAILY_BIBLE_URL);
+
+        if (!response.ok) {
+            throw new Error("Bible data could not be loaded.");
+        }
+
+        const bible = await response.json();
+
+        const allVerses = [];
+
+        // Go through all 66 books, chapters, and verses.
+        bible.books.forEach(book => {
+            book.chapters.forEach(chapter => {
+                chapter.verses.forEach(verse => {
+                    allVerses.push({
+                        text: verse.text,
+                        reference:
+                            book.name + " " +
+                            chapter.chapter + ":" +
+                            verse.verse
+                    });
+                });
+            });
+        });
+
+        if (allVerses.length !== 31102) {
+            throw new Error("The Bible data was incomplete.");
+        }
+
+        // Pick the verse corresponding to today's position.
+        const verseNumber = getDailyVerseNumber();
+
+        const selectedVerse = allVerses[verseNumber];
+
+        const savedData = {
+            date: savedDate,
+            verse: selectedVerse
+        };
+
+        localStorage.setItem(
+            DAILY_VERSE_KEY,
+            JSON.stringify(savedData)
+        );
+
+        displayDailyVerse(selectedVerse);
+
+        console.log(
+            "Daily verse loaded:",
+            selectedVerse.reference
+        );
+
+    } catch (error) {
+        console.error("Daily verse error:", error);
+
+        status.textContent =
+            "Today's verse couldn't load. Please refresh and try again.";
+    }
+}
+
+// Start the daily verse feature.
+document.addEventListener("DOMContentLoaded", loadDailyVerse);
