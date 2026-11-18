@@ -1,0 +1,652 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scripture Quest | Holy Bible</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --gold: #d9b66d;
+    --purple: #9b75ff;
+    --background: #080710;
+    --panel: #151221;
+    --text: #f8f3e9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--background);
+    color: var(--text);
+    font-family: Inter, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 0%, #533b842c, transparent 60%),
+      radial-gradient(ellipse at 90% 90%, #c29a3215, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* OPENING ANIMATION */
+
+#intro {
+    position: fixed;
+    inset: 0;
+    background: #080710;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: opacity 1s, visibility 1s;
+}
+
+#intro.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.book {
+    width: 190px;
+    height: 130px;
+    position: relative;
+    perspective: 1000px;
+    margin-bottom: 35px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.book-cover {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #b18b43, #66451b);
+    border: 3px solid #e4c77f;
+    border-radius: 8px 15px 15px 8px;
+    box-shadow: 0 0 45px #d9b66d55;
+}
+
+.book-cover::after {
+    content: "✝";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 55px;
+    color: #fff1bd;
+}
+
+.book-page {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    width: 47%;
+    height: 120px;
+    background: #fff5dc;
+    transform-origin: left;
+    border-radius: 0 5px 5px 0;
+    animation: openBook 2s ease-in-out forwards;
+}
+
+.book-page:nth-child(2) {
+    animation-delay: .25s;
+    background: #e8d8b5;
+}
+
+@keyframes openBook {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(-155deg); }
+}
+
+@keyframes float {
+    50% { transform: translateY(-12px); }
+}
+
+.intro-title {
+    font-family: Cinzel, serif;
+    font-size: 34px;
+    letter-spacing: 5px;
+    color: var(--gold);
+    animation: appear 2s ease;
+}
+
+.intro-subtitle {
+    color: #aaa0ba;
+    letter-spacing: 4px;
+    font-size: 11px;
+    margin-top: 12px;
+}
+
+.loading {
+    width: 170px;
+    height: 3px;
+    background: #30283d;
+    margin-top: 35px;
+    overflow: hidden;
+}
+
+.loading::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--gold);
+    transform: translateX(-100%);
+    animation: load 3s ease forwards;
+}
+
+@keyframes load {
+    to { transform: translateX(0); }
+}
+
+@keyframes appear {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* MAIN WEBSITE */
+
+header {
+    height: 85px;
+    border-bottom: 1px solid #ffffff12;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 7%;
+    background: #0b0914cc;
+    backdrop-filter: blur(15px);
+}
+
+.logo {
+    font-family: Cinzel, serif;
+    font-size: 23px;
+    font-weight: 800;
+    color: var(--gold);
+    letter-spacing: 2px;
+}
+
+.logo span {
+    color: white;
+}
+
+.status {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #a99db9;
+}
+
+.status::before {
+    content: "● ";
+    color: #75d99c;
+}
+
+main {
+    width: min(850px, 90%);
+    margin: 80px auto;
+    text-align: center;
+}
+
+.eyebrow {
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 5px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-family: Cinzel, serif;
+    font-size: clamp(32px, 6vw, 55px);
+    line-height: 1.25;
+    margin-bottom: 18px;
+}
+
+.description {
+    color: #aaa3b8;
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 48px;
+}
+
+/* FEATURED MESSAGE */
+
+.featured {
+    background: linear-gradient(120deg, #21172f, #30203d);
+    border: 1px solid #d9b66d55;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 45px #0005;
+}
+
+.featured-label {
+    color: var(--gold);
+    font-size: 10px;
+    letter-spacing: 4px;
+    margin-bottom: 13px;
+}
+
+.featured-message {
+    font-family: Cinzel, serif;
+    font-size: clamp(19px, 4vw, 27px);
+    line-height: 1.5;
+    color: #fff0c9;
+}
+
+/* SEARCH PANEL */
+
+.search-panel {
+    background: #151221;
+    border: 1px solid #ffffff17;
+    border-radius: 18px;
+    padding: 30px;
+    text-align: left;
+    box-shadow: 0 20px 60px #0005;
+}
+
+.field-label {
+    display: block;
+    color: #c8bfd4;
+    font-size: 12px;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+input, select {
+    width: 100%;
+    background: #0c0a14;
+    color: white;
+    border: 1px solid #40364e;
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 14px;
+    outline: none;
+    margin-bottom: 22px;
+    font-family: Inter, sans-serif;
+}
+
+input:focus, select:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 15px #d9b66d22;
+}
+
+select option {
+    background: #151221;
+}
+
+.search-button {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 17px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    background: linear-gradient(100deg, #b28b42, #e6c77c);
+    color: #17101a;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.search-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px #d9b66d44;
+}
+
+.search-button:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+
+.hint {
+    color: #777083;
+    font-size: 11px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* VERSE RESULTS */
+
+#result {
+    display: none;
+    margin-top: 30px;
+    text-align: left;
+    background: linear-gradient(145deg, #20192d, #14111e);
+    border: 1px solid #d9b66d66;
+    border-radius: 18px;
+    padding: 30px;
+    animation: appear .6s ease;
+}
+
+.result-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.result-reference {
+    color: var(--gold);
+    font-family: Cinzel, serif;
+    font-size: 20px;
+}
+
+.result-version {
+    color: #a99db9;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.verse-text {
+    font-family: Georgia, serif;
+    font-size: 21px;
+    line-height: 1.9;
+    color: #f4ecdc;
+    white-space: pre-line;
+}
+
+.result-bottom {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #ffffff15;
+    display: flex;
+    gap: 12px;
+}
+
+.small-button {
+    background: #292238;
+    color: var(--gold);
+    border: 1px solid #d9b66d55;
+    padding: 11px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#message {
+    color: #e6b8a0;
+    text-align: center;
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 35px 15px;
+    border-top: 1px solid #ffffff12;
+    color: #777083;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+footer span {
+    color: var(--gold);
+}
+
+@media(max-width:600px) {
+    header { padding: 0 5%; }
+    .logo { font-size: 18px; }
+    .status { font-size: 9px; }
+    main { margin: 55px auto; }
+    .search-panel { padding: 20px; }
+    #result { padding: 22px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- OPENING SCREEN -->
+
+<div id="intro">
+    <div class="book">
+        <div class="book-cover"></div>
+        <div class="book-page"></div>
+    </div>
+
+    <div class="intro-title">SCRIPTURE QUEST</div>
+    <div class="intro-subtitle">DISCOVER THE WORD OF GOD</div>
+    <div class="loading"></div>
+</div>
+
+<!-- HEADER -->
+
+<header>
+    <div class="logo">SCRIPTURE <span>QUEST</span></div>
+    <div class="status">WORD OF GOD</div>
+</header>
+
+<!-- HOME SCREEN -->
+
+<main>
+
+    <div class="eyebrow">WELCOME TO SCRIPTURE QUEST</div>
+
+    <h1>Discover His Word.</h1>
+
+    <p class="description">
+        Explore the Holy Bible, discover scripture,
+        and grow in your understanding of God's Word.
+    </p>
+
+    <!-- FEATURED MESSAGE -->
+
+    <div class="featured">
+        <div class="featured-label">A MESSAGE TO REMEMBER</div>
+        <div class="featured-message">
+            He is coming soon prepare
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+
+    <div class="search-panel">
+
+        <label class="field-label" for="verseInput">
+            ENTER A BIBLE VERSE OR PASSAGE
+        </label>
+
+        <input
+            id="verseInput"
+            type="text"
+            placeholder="Example: John 3:16"
+        >
+
+        <label class="field-label" for="version">
+            SELECT YOUR BIBLE VERSION
+        </label>
+
+        <select id="version">
+            <option value="kjv">King James Version (KJV)</option>
+            <option value="web">World English Bible (WEB)</option>
+            <option value="bsb">Berean Standard Bible (BSB)</option>
+            <option value="asv">American Standard Version (ASV)</option>
+            <option value="bbe">Bible in Basic English (BBE)</option>
+            <option value="darby">Darby Bible</option>
+            <option value="dra">Douay-Rheims Bible</option>
+            <option value="ylt">Young's Literal Translation (YLT)</option>
+            <option value="oeb-us">Open English Bible (US)</option>
+            <option value="webbe">World English Bible (British)</option>
+        </select>
+
+        <button class="search-button" id="searchButton" onclick="searchBible()">
+            ✦ SEARCH THE SCRIPTURES ✦
+        </button>
+
+        <div class="hint">
+            Try John 3:16, Psalm 23, Genesis 1:1, or Romans 8:28
+        </div>
+
+    </div>
+
+    <div id="message"></div>
+
+    <!-- RESULTS -->
+
+    <div id="result">
+
+        <div class="result-top">
+            <div class="result-reference" id="reference"></div>
+            <div class="result-version" id="versionName"></div>
+        </div>
+
+        <div class="verse-text" id="verseText"></div>
+
+        <div class="result-bottom">
+            <button class="small-button" onclick="copyVerse()">
+                COPY VERSE
+            </button>
+        </div>
+
+    </div>
+
+</main>
+
+<footer>
+    <span>✝</span> SCRIPTURE QUEST
+    <p style="margin-top:12px">
+        EXPLORE • DISCOVER • GROW IN FAITH
+    </p>
+</footer>
+
+<script>
+
+// OPENING ANIMATION
+
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        document.getElementById("intro").classList.add("hide");
+    }, 3500);
+});
+
+
+// BIBLE SEARCH ENGINE
+
+async function searchBible() {
+
+    const input = document.getElementById("verseInput").value.trim();
+    const version = document.getElementById("version").value;
+
+    const button = document.getElementById("searchButton");
+    const message = document.getElementById("message");
+    const result = document.getElementById("result");
+
+    if (!input) {
+        message.textContent = "Please enter a Bible verse first.";
+        result.style.display = "none";
+        return;
+    }
+
+    button.disabled = true;
+    button.textContent = "SEARCHING SCRIPTURES...";
+    message.textContent = "Opening the Bible...";
+    result.style.display = "none";
+
+    try {
+
+        const url =
+            "https://bible-api.com/" +
+            encodeURIComponent(input) +
+            "?translation=" + encodeURIComponent(version);
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("Verse not found.");
+        }
+
+        const data = await response.json();
+
+        if (!data.text) {
+            throw new Error("No verse was returned.");
+        }
+
+        document.getElementById("reference").textContent =
+            data.reference;
+
+        document.getElementById("versionName").textContent =
+            data.translation_name || version.toUpperCase();
+
+        document.getElementById("verseText").textContent =
+            data.text.trim();
+
+        result.style.display = "block";
+        message.textContent = "";
+
+        result.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+    } catch (error) {
+
+        message.textContent =
+            "We couldn't find that passage. Check the reference and try again.";
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "✦ SEARCH THE SCRIPTURES ✦";
+
+    }
+}
+
+
+// ENTER KEY SEARCH
+
+document.getElementById("verseInput").addEventListener("keydown", event => {
+    if (event.key === "Enter") {
+        searchBible();
+    }
+});
+
+
+// COPY VERSE
+
+function copyVerse() {
+
+    const reference =
+        document.getElementById("reference").textContent;
+
+    const verse =
+        document.getElementById("verseText").textContent;
+
+    const version =
+        document.getElementById("versionName").textContent;
+
+    const text =
+        reference + "\n" + verse + "\n" + version;
+
+    navigator.clipboard.writeText(text)
+        .then(() => {
+            document.querySelector(".small-button").textContent =
+                "COPIED! ✓";
+
+            setTimeout(() => {
+                document.querySelector(".small-button").textContent =
+                    "COPY VERSE";
+            }, 2000);
+        })
+        .catch(() => {
+            document.getElementById("message").textContent =
+                "Copy wasn't available in this browser.";
+        });
+}
+
+</script>
+
+</body>
+</html>
